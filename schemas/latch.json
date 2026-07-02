@@ -1,0 +1,169 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://psma.com/tbas/latch.json",
+    "title": "latch",
+    "description": "Set/reset latch component data. The presence of the 'latch' field at the top level of a TBAS document discriminates the family. Covers discrete SR-latch logic parts (74HC279 class); the `behavioral` block is the ideal latch atom consumed by CIAS control bricks — the commutation memory of peak-current-mode control (clock sets, current comparator resets). Valid on an otherwise part-less document.",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "manufacturerInfo": {
+            "title": "latchManufacturerInfo",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/name"
+                },
+                "reference": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/reference"
+                },
+                "status": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/status"
+                },
+                "description": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/description"
+                },
+                "orderCode": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/orderCode"
+                },
+                "datasheetUrl": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/datasheetUrl"
+                },
+                "family": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/family"
+                },
+                "series": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/series"
+                },
+                "spiceModel": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/spiceModel"
+                },
+                "datasheetInfo": {
+                    "$ref": "#/$defs/datasheetInfo"
+                }
+            },
+            "required": [
+                "name",
+                "datasheetInfo"
+            ]
+        },
+        "distributorsInfo": {
+            "description": "Where to buy this component.",
+            "type": "array",
+            "items": {
+                "$ref": "https://psma.com/peas/utils.json#/$defs/distributorInfo"
+            }
+        },
+        "behavioral": {
+            "$ref": "#/$defs/behavioral"
+        }
+    },
+    "anyOf": [
+        {
+            "required": [
+                "manufacturerInfo"
+            ]
+        },
+        {
+            "required": [
+                "behavioral"
+            ]
+        },
+        {
+            "maxProperties": 0
+        }
+    ],
+    "$defs": {
+        "behavioral": {
+            "title": "latchBehavioral",
+            "description": "Simulator-agnostic IDEAL SR latch: the output goes to outputHigh when v(set) rises through setThreshold, to outputLow when v(reset) rises through resetThreshold, and HOLDS otherwise. dominance resolves simultaneous set+reset — a real design decision in PCM controllers, therefore required and never defaulted (gate latches are reset-dominant so over-current protection wins the race with the clock). Present on an otherwise part-less document to describe an ideal control block. Backend emission: canonical self-holding subcircuit — B-source V(state)=if(v(set)>Vth, 1, if(v(reset)>Vth, 0, v(state))) with a 1 ns RC on the state node for memory/convergence, plus an output stage mapping state 0/1 to outputLow/outputHigh; ngspice alternative XSPICE d_srlatch + dac/adc bridges.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "setThreshold",
+                "resetThreshold",
+                "outputHigh",
+                "outputLow",
+                "dominance"
+            ],
+            "properties": {
+                "setThreshold": {
+                    "description": "Set-input trip level, in V.",
+                    "type": "number"
+                },
+                "resetThreshold": {
+                    "description": "Reset-input trip level, in V (independent of setThreshold — controllers routinely differ).",
+                    "type": "number"
+                },
+                "outputHigh": {
+                    "description": "Output level in the set state, in V.",
+                    "type": "number"
+                },
+                "outputLow": {
+                    "description": "Output level in the reset state, in V.",
+                    "type": "number"
+                },
+                "dominance": {
+                    "description": "Which input wins while both are above threshold.",
+                    "type": "string",
+                    "enum": [
+                        "set",
+                        "reset"
+                    ]
+                }
+            }
+        },
+        "datasheetInfo": {
+            "title": "latchDatasheetInfo",
+            "description": "All information extracted from the latch datasheet.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "part": {
+                    "$ref": "./utils.json#/$defs/part"
+                },
+                "electrical": {
+                    "$ref": "#/$defs/electrical"
+                },
+                "thermal": {
+                    "$ref": "./utils.json#/$defs/thermal"
+                },
+                "mechanical": {
+                    "$ref": "./utils.json#/$defs/mechanical"
+                },
+                "provenance": {
+                    "description": "Data-provenance trail (see provenance).",
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/provenance"
+                }
+            },
+            "required": [
+                "part",
+                "electrical"
+            ]
+        },
+        "electrical": {
+            "title": "latchElectrical",
+            "description": "Latch electricals (thin: discrete latch parts are selected on logic family, speed and channel count).",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "technology": {
+                    "$ref": "./utils.json#/$defs/logicFamily"
+                },
+                "propagationDelay": {
+                    "description": "Input-to-output propagation delay, in s.",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "numberOfChannels": {
+                    "description": "Latches per package.",
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "supply": {
+                    "$ref": "./utils.json#/$defs/supply"
+                }
+            }
+        }
+    }
+}

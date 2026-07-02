@@ -1,0 +1,260 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://psma.com/tbas/timer.json",
+    "title": "timer",
+    "description": "Timer component data (555 class and successors). The presence of the 'timer' field at the top level of a TBAS document discriminates the family. The `behavioral` block is the ideal timer atom consumed by CIAS control bricks — the monostable one-shot is what makes constant-on-time control a single component. Valid on an otherwise part-less document.",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "manufacturerInfo": {
+            "title": "timerManufacturerInfo",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/name"
+                },
+                "reference": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/reference"
+                },
+                "status": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/status"
+                },
+                "description": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/description"
+                },
+                "orderCode": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/orderCode"
+                },
+                "datasheetUrl": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/datasheetUrl"
+                },
+                "family": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/family"
+                },
+                "series": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/series"
+                },
+                "spiceModel": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/spiceModel"
+                },
+                "datasheetInfo": {
+                    "$ref": "#/$defs/datasheetInfo"
+                }
+            },
+            "required": [
+                "name",
+                "datasheetInfo"
+            ]
+        },
+        "distributorsInfo": {
+            "description": "Where to buy this component.",
+            "type": "array",
+            "items": {
+                "$ref": "https://psma.com/peas/utils.json#/$defs/distributorInfo"
+            }
+        },
+        "behavioral": {
+            "$ref": "#/$defs/behavioral"
+        }
+    },
+    "anyOf": [
+        {
+            "required": [
+                "manufacturerInfo"
+            ]
+        },
+        {
+            "required": [
+                "behavioral"
+            ]
+        },
+        {
+            "maxProperties": 0
+        }
+    ],
+    "$defs": {
+        "behavioral": {
+            "title": "timerBehavioral",
+            "description": "Simulator-agnostic IDEAL timer. mode='monostable': the output goes to outputHigh for onTime seconds when v(trigger) crosses threshold in the active direction, then returns to outputLow (retriggerable decides mid-pulse behavior). mode='astable': free-running rectangular output with period/dutyCycle (kept here rather than as an oscillator because real 555 astables are ordered as timers). Present on an otherwise part-less document to describe an ideal control block. Backend emission: monostable -> canonical edge-detect + ramp + comparator subcircuit; astable -> PULSE source.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "mode",
+                "outputHigh",
+                "outputLow"
+            ],
+            "properties": {
+                "mode": {
+                    "description": "monostable = triggered one-shot; astable = free-running.",
+                    "type": "string",
+                    "enum": [
+                        "monostable",
+                        "astable"
+                    ]
+                },
+                "outputHigh": {
+                    "description": "Output level in the active/high state, in V.",
+                    "type": "number"
+                },
+                "outputLow": {
+                    "description": "Output level in the idle/low state, in V.",
+                    "type": "number"
+                },
+                "threshold": {
+                    "description": "Trigger trip level, in V (monostable).",
+                    "type": "number"
+                },
+                "polarity": {
+                    "description": "Active trigger edge (monostable).",
+                    "type": "string",
+                    "enum": [
+                        "risingEdge",
+                        "fallingEdge"
+                    ]
+                },
+                "onTime": {
+                    "description": "Output pulse width, in s (monostable).",
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                "retriggerable": {
+                    "description": "true: a trigger during the pulse restarts onTime; false: triggers are ignored until the pulse ends. Required for monostable — the two behaviors differ exactly when constant-on-time control hits minimum-off-time.",
+                    "type": "boolean"
+                },
+                "period": {
+                    "description": "Repetition period, in s (astable).",
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                "dutyCycle": {
+                    "description": "High fraction of the period (astable).",
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "exclusiveMaximum": 1
+                }
+            },
+            "oneOf": [
+                {
+                    "properties": {
+                        "mode": {
+                            "const": "monostable"
+                        }
+                    },
+                    "required": [
+                        "threshold",
+                        "polarity",
+                        "onTime",
+                        "retriggerable"
+                    ],
+                    "not": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "period"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "dutyCycle"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "properties": {
+                        "mode": {
+                            "const": "astable"
+                        }
+                    },
+                    "required": [
+                        "period",
+                        "dutyCycle"
+                    ],
+                    "not": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "threshold"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "polarity"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "onTime"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "retriggerable"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "datasheetInfo": {
+            "title": "timerDatasheetInfo",
+            "description": "All information extracted from the timer datasheet.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "part": {
+                    "$ref": "./utils.json#/$defs/part"
+                },
+                "electrical": {
+                    "$ref": "#/$defs/electrical"
+                },
+                "thermal": {
+                    "$ref": "./utils.json#/$defs/thermal"
+                },
+                "mechanical": {
+                    "$ref": "./utils.json#/$defs/mechanical"
+                },
+                "provenance": {
+                    "description": "Data-provenance trail (see provenance).",
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/provenance"
+                }
+            },
+            "required": [
+                "part",
+                "electrical"
+            ]
+        },
+        "electrical": {
+            "title": "timerElectrical",
+            "description": "Timer electricals. timingAccuracy is the initial timing error as a dimensionless fraction (0.01 = 1%); bipolar 555s sit at 1-3%, CMOS 555s at 0.5-2%, precision timers below.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "technology": {
+                    "$ref": "./utils.json#/$defs/timerTechnology"
+                },
+                "maximumFrequency": {
+                    "description": "Maximum astable operating frequency, in Hz (bipolar 555 ~500 kHz, CMOS ~3 MHz).",
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                "timingAccuracy": {
+                    "description": "Initial timing error, dimensionless fraction (0.01 = 1%).",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "numberOfChannels": {
+                    "description": "Timers per package (a 556 is 2).",
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "supply": {
+                    "$ref": "./utils.json#/$defs/supply"
+                }
+            }
+        }
+    }
+}

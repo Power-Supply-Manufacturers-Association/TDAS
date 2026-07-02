@@ -1,0 +1,42 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://psma.com/tbas/inputs.json",
+    "title": "inputs",
+    "description": "Inputs used to select or evaluate a time-base part. Mirrors the SAS / AAS inputs structure: a required designRequirements seed plus optional operatingPoints (the conditions under which the part's frequency error and dissipation are evaluated). outputs[i] aligns positionally with operatingPoints[i].",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "designRequirements"
+    ],
+    "properties": {
+        "designRequirements": {
+            "$ref": "./inputs/designRequirements.json"
+        },
+        "operatingPoints": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/operatingPoint"
+            }
+        }
+    },
+    "$defs": {
+        "operatingPoint": {
+            "description": "One operating condition relevant to a time base: ambient temperature dominates frequency error, supply voltage sets dissipation and (for VCXO) the control window.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "ambientTemperature": {
+                    "description": "Ambient temperature, in degC.",
+                    "type": "number"
+                },
+                "supplyVoltage": {
+                    "description": "Supply voltage at this point, in V.",
+                    "type": "number"
+                }
+            }
+        }
+    }
+}

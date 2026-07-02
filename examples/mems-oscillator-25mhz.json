@@ -1,0 +1,60 @@
+{
+    "inputs": {
+        "designRequirements": {
+            "name": "25 MHz system clock for a digital PFC controller",
+            "deviceType": "oscillator",
+            "frequency": {
+                "nominal": 25000000.0
+            },
+            "maximumFrequencyStability": 5e-05,
+            "supplyVoltage": {
+                "minimum": 2.5,
+                "maximum": 3.6
+            }
+        }
+    },
+    "oscillator": {
+        "manufacturerInfo": {
+            "name": "SiTime",
+            "reference": "SiT8008BI-73-33E-25.000000",
+            "status": "production",
+            "datasheetUrl": "https://www.sitime.com/datasheet/SiT8008",
+            "series": "SiT8008",
+            "datasheetInfo": {
+                "part": {
+                    "partNumber": "SiT8008BI-73-33E-25.000000",
+                    "package": "2016 4-pad",
+                    "qualification": "Industrial"
+                },
+                "electrical": {
+                    "technology": "mems",
+                    "frequency": 25000000.0,
+                    "outputType": "cmos",
+                    "frequencyStability": 2.5e-05,
+                    "agingPerYear": 1e-06,
+                    "rmsPhaseJitter": 1.1e-12,
+                    "jitterBandLow": 12000.0,
+                    "jitterBandHigh": 20000000.0,
+                    "startupTime": 0.005,
+                    "dutyCycle": {
+                        "minimum": 0.45,
+                        "maximum": 0.55
+                    },
+                    "enableFunction": "outputEnable",
+                    "supply": {
+                        "minimumSupplyVoltage": 2.25,
+                        "maximumSupplyVoltage": 3.63,
+                        "currentConsumption": 0.0038
+                    }
+                },
+                "thermal": {
+                    "operatingTemperature": {
+                        "minimum": -40.0,
+                        "maximum": 85.0
+                    }
+                }
+            }
+        }
+    },
+    "outputs": []
+}

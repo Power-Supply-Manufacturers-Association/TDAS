@@ -1,0 +1,53 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://psma.com/tbas/inputs/designRequirements.json",
+    "title": "designRequirements",
+    "description": "The requirements a time-base part must comply with. Built on the PEAS designRequirementsBase mixin, with a deviceType discriminator that aligns with TBAS's top-level family discriminator, plus a small set of generic selection seeds (the AAS single-seed pattern: time-base selection filters on family + a couple of headline specs).",
+    "allOf": [
+        {
+            "$ref": "https://psma.com/peas/utils.json#/$defs/designRequirementsBase"
+        },
+        {
+            "type": "object",
+            "properties": {
+                "deviceType": {
+                    "description": "Required time-base family. Aligns with TBAS's top-level family discriminator.",
+                    "type": "string",
+                    "enum": [
+                        "oscillator",
+                        "timer",
+                        "latch"
+                    ]
+                },
+                "frequency": {
+                    "description": "Required output frequency, in Hz.",
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/dimensionWithTolerance"
+                },
+                "maximumFrequencyStability": {
+                    "description": "Maximum acceptable frequency stability over temperature, dimensionless (1 ppm = 1e-6).",
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                "maximumRmsPhaseJitter": {
+                    "description": "Maximum acceptable RMS phase jitter, in s.",
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                "supplyVoltage": {
+                    "description": "Supply voltage available to the part, in V.",
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/dimensionWithTolerance"
+                },
+                "maximumCurrentConsumption": {
+                    "description": "Maximum acceptable steady-state supply current, in A.",
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                }
+            },
+            "required": [
+                "deviceType"
+            ]
+        }
+    ],
+    "$defs": {},
+    "unevaluatedProperties": false
+}

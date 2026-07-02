@@ -1,0 +1,18 @@
+{
+    "inputs": {
+        "designRequirements": {
+            "name": "peak-current-mode gate latch (behavioural control block, not a catalog part)",
+            "deviceType": "latch"
+        }
+    },
+    "latch": {
+        "behavioral": {
+            "setThreshold": 2.5,
+            "resetThreshold": 2.5,
+            "outputHigh": 10.0,
+            "outputLow": 0.0,
+            "dominance": "reset"
+        }
+    },
+    "outputs": []
+}

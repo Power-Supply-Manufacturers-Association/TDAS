@@ -1,0 +1,17 @@
+{
+    "inputs": {
+        "designRequirements": {
+            "name": "ideal 100 kHz PWM sawtooth ramp (behavioural control block, not a catalog part)",
+            "deviceType": "oscillator"
+        }
+    },
+    "oscillator": {
+        "behavioral": {
+            "shape": "sawtooth",
+            "frequency": 100000.0,
+            "amplitude": 1.0,
+            "offset": 0.0
+        }
+    },
+    "outputs": []
+}

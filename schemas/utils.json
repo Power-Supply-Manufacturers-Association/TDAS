@@ -1,0 +1,175 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://psma.com/tbas/utils.json",
+    "title": "TBAS utils",
+    "description": "Shared sub-schemas reused by every TBAS per-family document (oscillator, timer, latch). Identification (part/thermal/mechanical) mirrors the AAS/SAS pattern and reuses the PEAS datasheetInfo* bases. The supply block is TBAS-specific: time bases are single-channel, and the OCXO oven makes warm-up power a first-class spec. Fractional-frequency quantities (tolerance, stability, aging, pull range) are stored as DIMENSIONLESS fractions (1 ppm = 1e-6), keeping the all-SI rule; descriptions state the ppm equivalence.",
+    "$defs": {
+        "part": {
+            "title": "timeBasePart",
+            "description": "Part identification — shared across all time-base families. Extends the PEAS datasheetInfoPartBase.",
+            "allOf": [
+                {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/datasheetInfoPartBase"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "partNumber": {},
+                        "series": {},
+                        "case": {},
+                        "description": {},
+                        "package": {
+                            "type": "string",
+                            "description": "Manufacturer's exact package designation (e.g. '3225 4-pad ceramic', 'SOT-23-5'). Complements case, which holds the generic industry code."
+                        },
+                        "qualification": {
+                            "type": "string",
+                            "description": "Qualification grade (e.g. Industrial, Automotive (AEC-Q100/Q200))."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "thermal": {
+            "title": "timeBaseThermal",
+            "description": "Thermal section — extends the PEAS datasheetInfoThermal (operating-temperature range). Frequency stability is specified OVER this range, so the range is load-bearing for oscillators.",
+            "allOf": [
+                {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/datasheetInfoThermal"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "operatingTemperature": {}
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "mechanical": {
+            "title": "timeBaseMechanical",
+            "description": "Mechanical specs — extends PEAS datasheetInfoMechanical with a package case field.",
+            "allOf": [
+                {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/datasheetInfoMechanical"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "length": {},
+                        "width": {},
+                        "height": {},
+                        "diameter": {},
+                        "weight": {},
+                        "shapeType": {},
+                        "assemblyType": {},
+                        "case": {
+                            "type": "string",
+                            "description": "Package name (2016, 3225, SOIC-8, ...) — mirrors part.case for convenience."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "supply": {
+            "title": "timeBaseSupply",
+            "description": "Power-supply operating window. Time bases are single-channel, so the current is the device current (no per-channel split). warmupPower exists because ovenized oscillators draw watts while the oven heats — a defining OCXO spec, meaningless for other classes (absent there).",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "minimumSupplyVoltage": {
+                    "description": "Minimum operating supply voltage, in V.",
+                    "type": "number"
+                },
+                "maximumSupplyVoltage": {
+                    "description": "Maximum operating supply voltage, in V.",
+                    "type": "number"
+                },
+                "currentConsumption": {
+                    "description": "Steady-state operating supply current (no load / CMOS load as datasheet-specified), in A.",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "warmupPower": {
+                    "description": "Peak supply power during oven warm-up, in W (OCXO only; steady-state power is derivable as supply voltage x currentConsumption and is NOT stored).",
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        },
+        "oscillatorTechnology": {
+            "title": "oscillatorTechnology",
+            "description": "Resonator / oscillator technology class. quartzCrystal and ceramicResonator are BARE resonators (no active circuit: loadCapacitance / equivalentSeriesResistance / resonantImpedance / builtInCapacitance apply, supply does not); all other values are complete oscillators. programmable covers factory-programmed blanks, pin-selectable XOs and DCXOs (the mechanism does not change the parametric surface). Compound classes are combinations, not new values: TCXO + pullRange = VCTCXO. Deliberately OUT of scope: RTC modules (calendar ICs — CTAS territory), clock generators / buffers / jitter attenuators (clock distribution, not a time base), RF VCOs and SAW devices (RF synthesis/remote-control, no converter role).",
+            "type": "string",
+            "enum": [
+                "quartzCrystal",
+                "ceramicResonator",
+                "crystalOscillator",
+                "tcxo",
+                "vcxo",
+                "ocxo",
+                "mems",
+                "siliconRC",
+                "programmable"
+            ]
+        },
+        "enableFunction": {
+            "title": "enableFunction",
+            "description": "Output-control pin function of a packaged oscillator (the DigiKey 'Function' filter): outputEnable gates the output stage (oscillator keeps running), standby powers the whole device down (restart costs startupTime), triState floats the output. none = no control pin.",
+            "type": "string",
+            "enum": [
+                "none",
+                "outputEnable",
+                "standby",
+                "triState"
+            ]
+        },
+        "oscillatorMode": {
+            "title": "oscillatorMode",
+            "description": "Quartz vibration mode. Fundamental AT-cut tops out around 50 MHz in standard packages (inverted-mesa HFF reaches ~250 MHz); overtone cuts extend higher. Meaningless for MEMS/RC.",
+            "type": "string",
+            "enum": [
+                "fundamental",
+                "overtone3",
+                "overtone5",
+                "overtone7"
+            ]
+        },
+        "outputType": {
+            "title": "outputType",
+            "description": "Electrical output format. Single-ended CMOS tops out around 250 MHz; LVDS/LVPECL/HCSL are the differential formats used above that. clippedSine is the TCXO-typical low-power format; sine is a pure analog output (OCXO/lab class). none is a bare resonator (quartzCrystal).",
+            "type": "string",
+            "enum": [
+                "cmos",
+                "lvds",
+                "lvpecl",
+                "hcsl",
+                "clippedSine",
+                "sine",
+                "none"
+            ]
+        },
+        "timerTechnology": {
+            "title": "timerTechnology",
+            "description": "Timer process/class. bipolar555 is the classic NE555 (4.5-16 V, <=500 kHz astable); cmos555 the LMC/TLC class (down to 1.5 V, up to ~3 MHz); precision covers dedicated timing ICs with sub-1% accuracy; programmable covers digitally-set timers.",
+            "type": "string",
+            "enum": [
+                "bipolar555",
+                "cmos555",
+                "precision",
+                "programmable"
+            ]
+        },
+        "logicFamily": {
+            "title": "logicFamily",
+            "description": "Logic process family of a discrete latch part.",
+            "type": "string",
+            "enum": [
+                "CMOS",
+                "TTL"
+            ]
+        }
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "inputs": {
+        "designRequirements": {
+            "name": "constant-on-time one-shot, 2 µs",
+            "deviceType": "timer",
+            "supplyVoltage": {
+                "minimum": 4.5,
+                "maximum": 16.0
+            }
+        }
+    },
+    "timer": {
+        "manufacturerInfo": {
+            "name": "Texas Instruments",
+            "reference": "NE555P",
+            "status": "production",
+            "datasheetUrl": "https://www.ti.com/lit/ds/symlink/ne555.pdf",
+            "series": "NE555",
+            "datasheetInfo": {
+                "part": {
+                    "partNumber": "NE555P",
+                    "package": "PDIP-8"
+                },
+                "electrical": {
+                    "technology": "bipolar555",
+                    "maximumFrequency": 100000.0,
+                    "timingAccuracy": 0.01,
+                    "numberOfChannels": 1,
+                    "supply": {
+                        "minimumSupplyVoltage": 4.5,
+                        "maximumSupplyVoltage": 16.0,
+                        "currentConsumption": 0.003
+                    }
+                },
+                "thermal": {
+                    "operatingTemperature": {
+                        "minimum": 0.0,
+                        "maximum": 70.0
+                    }
+                }
+            }
+        },
+        "behavioral": {
+            "mode": "monostable",
+            "outputHigh": 5.0,
+            "outputLow": 0.0,
+            "threshold": 1.6667,
+            "polarity": "fallingEdge",
+            "onTime": 2e-06,
+            "retriggerable": false
+        }
+    },
+    "outputs": []
+}

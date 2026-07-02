@@ -1,0 +1,66 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://psma.com/tbas/tbas.json",
+    "title": "TBAS",
+    "description": "Time-Based Agnostic Structure (TBAS). A document carries inputs, exactly one of {oscillator, timer, latch} (the field name is the discriminator, the SAS/AAS pattern), and outputs. TBAS is the home for time-base components: frequency-control products (quartz crystals, XO/TCXO/VCXO/OCXO, MEMS and silicon-RC oscillators, programmable oscillators), timers (555-class monostable/astable), and set/reset latches. Every family also carries a simulator-agnostic ideal `behavioral` block, so an anonymous PWM ramp or PCM gate latch inside a CIAS control brick and an orderable SiTime part are the same type. Boundary: PWM/LLC/PFC controller ICs live in CTAS; analog signal-path ICs (op amps, comparators, sample-and-holds) live in AAS; TBAS holds the parts whose defining function is generating or sequencing TIME. Every valid TBAS document is also a valid PEAS document (the `timeBase` branch).",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "inputs": {
+            "description": "Design requirements and operating points for this time-base part.",
+            "title": "inputs",
+            "$ref": "./inputs.json"
+        },
+        "oscillator": {
+            "description": "Crystal / resonator / oscillator: bare quartz crystals and ceramic resonators, packaged XO, TCXO, VCXO, OCXO, MEMS, silicon-RC and programmable oscillators — plus the ideal periodic-source behavioral atom (PWM ramp, clock, resonant drive, voltage-controlled frequency).",
+            "title": "oscillator",
+            "$ref": "./oscillator.json"
+        },
+        "timer": {
+            "description": "555-class timer: monostable one-shot / astable — plus the ideal timer behavioral atom (constant-on-time generation).",
+            "title": "timer",
+            "$ref": "./timer.json"
+        },
+        "latch": {
+            "description": "Set/reset latch: discrete SR-latch logic parts — plus the ideal latch behavioral atom (peak-current-mode commutation memory).",
+            "title": "latch",
+            "$ref": "./latch.json"
+        },
+        "outputs": {
+            "description": "Computed results per operating point. outputs[i] aligns positionally with inputs.operatingPoints[i].",
+            "title": "outputs",
+            "type": "array",
+            "items": {
+                "$ref": "./outputs.json"
+            }
+        }
+    },
+    "anyOf": [
+        {
+            "required": [
+                "inputs",
+                "outputs"
+            ]
+        },
+        {
+            "maxProperties": 1
+        }
+    ],
+    "oneOf": [
+        {
+            "required": [
+                "oscillator"
+            ]
+        },
+        {
+            "required": [
+                "timer"
+            ]
+        },
+        {
+            "required": [
+                "latch"
+            ]
+        }
+    ]
+}

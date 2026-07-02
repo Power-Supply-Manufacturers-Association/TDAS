@@ -1,0 +1,303 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://psma.com/tbas/oscillator.json",
+    "title": "oscillator",
+    "description": "Oscillator / crystal component data. The presence of the 'oscillator' field at the top level of a TBAS document discriminates the family. Covers bare quartz resonators (technology=quartzCrystal) and every packaged oscillator class (XO, TCXO, VCXO, OCXO, MEMS, silicon-RC, programmable). The `behavioral` block is the ideal periodic-source atom consumed by CIAS control bricks (PWM ramp, PCM clock, resonant VCO); it is valid on an otherwise part-less document, exactly like the AAS comparator.",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "manufacturerInfo": {
+            "title": "oscillatorManufacturerInfo",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/name"
+                },
+                "reference": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/reference"
+                },
+                "status": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/status"
+                },
+                "description": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/description"
+                },
+                "orderCode": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/orderCode"
+                },
+                "datasheetUrl": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/datasheetUrl"
+                },
+                "family": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/family"
+                },
+                "series": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/series"
+                },
+                "spiceModel": {
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/manufacturerInfo/properties/spiceModel"
+                },
+                "datasheetInfo": {
+                    "$ref": "#/$defs/datasheetInfo"
+                }
+            },
+            "required": [
+                "name",
+                "datasheetInfo"
+            ]
+        },
+        "distributorsInfo": {
+            "description": "Where to buy this component.",
+            "type": "array",
+            "items": {
+                "$ref": "https://psma.com/peas/utils.json#/$defs/distributorInfo"
+            }
+        },
+        "behavioral": {
+            "$ref": "#/$defs/behavioral"
+        }
+    },
+    "anyOf": [
+        {
+            "required": [
+                "manufacturerInfo"
+            ]
+        },
+        {
+            "required": [
+                "behavioral"
+            ]
+        },
+        {
+            "maxProperties": 0
+        }
+    ],
+    "$defs": {
+        "behavioral": {
+            "title": "oscillatorBehavioral",
+            "description": "Simulator-agnostic IDEAL periodic source (PWM ramp, clock, resonant drive) — distinct from the datasheet `electrical` selection parameters. Instantaneous frequency f = frequency when frequencyControl is absent, else f = frequency + gain*v(control+, control-) (a VCO; f clamps at 0 — negative instantaneous frequency is meaningless). Present on an otherwise part-less document to describe an ideal control block. A backend (CiasCircuitConverter) emits: fixed-frequency sawtooth/triangle/square -> native PULSE independent source, fixed sine -> SINE/SIN source; any oscillator WITH frequencyControl -> canonical phase-accumulator subcircuit (G-source + 1 F capacitor integrating f(t) into a phase node, shaping B-source with floor()-wrap for saw/triangle/square or sin(2*pi*phase) for sine).",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "shape",
+                "frequency",
+                "amplitude",
+                "offset"
+            ],
+            "properties": {
+                "shape": {
+                    "description": "sawtooth rises 0..1 of the span and snaps back (PWM ramp); triangle is symmetric; square uses dutyCycle; sine for resonant drive.",
+                    "type": "string",
+                    "enum": [
+                        "sawtooth",
+                        "triangle",
+                        "square",
+                        "sine"
+                    ]
+                },
+                "frequency": {
+                    "description": "Free-running frequency f0, in Hz.",
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                "amplitude": {
+                    "description": "Peak amplitude, in V: the waveform spans offset..offset+amplitude (sawtooth/triangle/square) or offset±amplitude (sine).",
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                "offset": {
+                    "description": "DC offset, in V (see amplitude for the span convention). Required — no implicit 0.",
+                    "type": "number"
+                },
+                "phase": {
+                    "description": "Starting phase at t=0, in rad. Absent = the waveform origin (a defined convention, not a numeric default); include the field whenever a non-origin start matters.",
+                    "type": "number"
+                },
+                "dutyCycle": {
+                    "description": "High fraction of the period. Only meaningful (and required) for shape='square'.",
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "exclusiveMaximum": 1
+                },
+                "frequencyControl": {
+                    "description": "Present = this oscillator is a VCO (LLC/resonant FM control). The control pin pair is part of the component's pin set in CIAS.",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "gain"
+                    ],
+                    "properties": {
+                        "gain": {
+                            "description": "VCO gain k, in Hz/V: f = frequency + k*v(control+, control-).",
+                            "type": "number"
+                        }
+                    }
+                }
+            },
+            "if": {
+                "properties": {
+                    "shape": {
+                        "const": "square"
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "dutyCycle"
+                ]
+            },
+            "else": {
+                "not": {
+                    "required": [
+                        "dutyCycle"
+                    ]
+                }
+            }
+        },
+        "datasheetInfo": {
+            "title": "oscillatorDatasheetInfo",
+            "description": "All information extracted from the oscillator/crystal datasheet.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "part": {
+                    "$ref": "./utils.json#/$defs/part"
+                },
+                "electrical": {
+                    "$ref": "#/$defs/electrical"
+                },
+                "thermal": {
+                    "$ref": "./utils.json#/$defs/thermal"
+                },
+                "mechanical": {
+                    "$ref": "./utils.json#/$defs/mechanical"
+                },
+                "provenance": {
+                    "description": "Data-provenance trail (see provenance).",
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/provenance"
+                }
+            },
+            "required": [
+                "part",
+                "electrical"
+            ]
+        },
+        "electrical": {
+            "title": "oscillatorElectrical",
+            "description": "Oscillator/crystal electricals — the live distributor filter set plus the headline datasheet specs, nothing else (no derived quantities). Fractional-frequency specs (frequencyTolerance, frequencyStability, agingPerYear, pullRange, dutyCycle, spread-spectrum bandwidth) are DIMENSIONLESS fractions (1 ppm = 1e-6; 1% = 0.01 — the same field serves ppm-class quartz and %-class ceramic/RC parts). Condition-qualified specs carry their condition: rmsPhaseJitter carries its integration band. Bare-resonator fields (loadCapacitance, equivalentSeriesResistance, resonantImpedance, builtInCapacitance) apply to quartzCrystal/ceramicResonator; pullRange (absolute pull range, APR-style) to voltage/digitally-pulled classes; supply and enableFunction to every class EXCEPT bare resonators. The operating temperature range that stability is specified over lives in datasheetInfo.thermal (PEAS mixin), not here.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "technology": {
+                    "$ref": "./utils.json#/$defs/oscillatorTechnology"
+                },
+                "frequency": {
+                    "description": "Nominal output (or resonant) frequency, in Hz.",
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                "mode": {
+                    "$ref": "./utils.json#/$defs/oscillatorMode"
+                },
+                "outputType": {
+                    "$ref": "./utils.json#/$defs/outputType"
+                },
+                "frequencyTolerance": {
+                    "description": "Initial frequency tolerance at 25 degC, dimensionless (1 ppm = 1e-6). Stored as the +/- half-band magnitude.",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "frequencyStability": {
+                    "description": "Frequency stability over the operating temperature range, dimensionless (1 ppm = 1e-6). Stored as the +/- half-band magnitude.",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "agingPerYear": {
+                    "description": "Fractional frequency aging per year, dimensionless (1 ppm/yr = 1e-6). First-year value where the datasheet distinguishes.",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "rmsPhaseJitter": {
+                    "description": "RMS phase jitter over the stated integration band, in s.",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "jitterBandLow": {
+                    "description": "Lower edge of the jitter integration band, in Hz (typically 12 kHz).",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "jitterBandHigh": {
+                    "description": "Upper edge of the jitter integration band, in Hz (typically 20 MHz).",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "startupTime": {
+                    "description": "Power-on to stable-output time, in s. For OCXO this is the warm-up time to initial frequency tolerance.",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "pullRange": {
+                    "description": "Absolute pull range (APR), dimensionless (1 ppm = 1e-6), stored as the +/- half-band magnitude. Voltage/digitally-pulled classes (VCXO, VCTCXO, DCXO) only.",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "dutyCycle": {
+                    "description": "Output duty-cycle / symmetry window, dimensionless fraction of the period (a 45-55% spec is {minimum: 0.45, maximum: 0.55}).",
+                    "$ref": "https://psma.com/peas/utils.json#/$defs/dimensionWithTolerance"
+                },
+                "spreadSpectrum": {
+                    "description": "Present only on spread-spectrum / EMI-reduction oscillators (SSXO).",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "bandwidth",
+                        "mode"
+                    ],
+                    "properties": {
+                        "bandwidth": {
+                            "description": "Modulation bandwidth, dimensionless fraction of the center frequency (a +/-0.25% spread is 0.0025).",
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                        },
+                        "mode": {
+                            "description": "downSpread modulates below the nominal frequency only; centerSpread symmetrically around it.",
+                            "type": "string",
+                            "enum": [
+                                "downSpread",
+                                "centerSpread"
+                            ]
+                        }
+                    }
+                },
+                "enableFunction": {
+                    "$ref": "./utils.json#/$defs/enableFunction"
+                },
+                "loadCapacitance": {
+                    "description": "Specified load capacitance CL, in F (bare resonators).",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "equivalentSeriesResistance": {
+                    "description": "Maximum equivalent series resistance ESR, in Ohm (bare quartz crystals).",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "resonantImpedance": {
+                    "description": "Maximum resonant impedance, in Ohm (ceramic resonators — their ESR-equivalent filter).",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "builtInCapacitance": {
+                    "description": "Value of the built-in load capacitors, in F (three-terminal ceramic resonators). Absent = no built-in capacitors.",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "supply": {
+                    "$ref": "./utils.json#/$defs/supply"
+                }
+            }
+        }
+    }
+}

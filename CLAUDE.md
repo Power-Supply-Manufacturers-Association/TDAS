@@ -44,7 +44,7 @@ python3 scripts/validate.py
   re-run `validate.py`.
 
 There is **no** `data/` directory: orderable parts live in
-**`TAS/data/time_bases.ndjson`** (PEAS-wrapped `{"timeBase": ...}`),
+**`TAS/data/time_based.ndjson`** (PEAS-wrapped `{"timeBase": ...}`),
 validated by `TAS/tests/test_data.py` and physics-checked by the TAS
 validator ("Blade Runner", `TAS/validator/src/time_bases.cpp`).
 

@@ -59,7 +59,7 @@ Three gates (a gate that cannot run FAILS): schema meta-validation + full
 `tbas.json`, and PEAS citizenship of every example. Requires the sibling
 repos checked out alongside TBAS (see [the workspace layout](../PEAS)).
 
-Finished orderable parts live in **`TAS/data/time_bases.ndjson`** (PEAS-wrapped
+Finished orderable parts live in **`TAS/data/time_based.ndjson`** (PEAS-wrapped
 `{"timeBase": ...}`), validated by `TAS/tests/test_data.py` and physics-checked
 by the TAS validator.
 

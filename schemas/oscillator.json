@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://psma.com/tbas/oscillator.json",
+    "$id": "https://psma.com/tdas/oscillator.json",
     "title": "oscillator",
-    "description": "Oscillator / crystal component data. The presence of the 'oscillator' field at the top level of a TBAS document discriminates the family. Covers bare quartz resonators (technology=quartzCrystal) and every packaged oscillator class (XO, TCXO, VCXO, OCXO, MEMS, silicon-RC, programmable). The `behavioral` block is the ideal periodic-source atom consumed by CIAS control bricks (PWM ramp, PCM clock, resonant VCO); it is valid on an otherwise part-less document, exactly like the AAS comparator.",
+    "description": "Oscillator / crystal component data. The presence of the 'oscillator' field at the top level of a TDAS document discriminates the family. Covers bare quartz resonators (technology=quartzCrystal) and every packaged oscillator class (XO, TCXO, VCXO, OCXO, MEMS, silicon-RC, programmable). The `behavioral` block is the ideal periodic-source atom consumed by CIAS control bricks (PWM ramp, PCM clock, resonant VCO); it is valid on an otherwise part-less document, exactly like the AAS comparator.",
     "type": "object",
     "additionalProperties": false,
     "properties": {

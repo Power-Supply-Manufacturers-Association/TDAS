@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Validate TBAS schemas + examples against the PSMA cross-repo registry.
+"""Validate TDAS schemas + examples against the PSMA cross-repo registry.
 
 Three gates:
-  1. every TBAS schema meta-validates AND every $ref it contains resolves
+  1. every TDAS schema meta-validates AND every $ref it contains resolves
      against the cross-repo registry (catches dangling refs);
-  2. each examples/*.json validates against tbas.json;
+  2. each examples/*.json validates against tdas.json;
   3. each example is also a valid PEAS document (the `timeBase` branch).
 
 NOTE: gate 3: PEAS citizenship (PEAS has the `timeBase` branch; a skip is a FAILURE).
@@ -25,7 +25,7 @@ PSMA = os.path.dirname(HERE)
 
 def load_all():
     resources = []
-    for repo in ("PEAS", "MAS", "CAS", "SAS", "RAS", "CONAS", "CTAS", "AAS", "TBAS", "TAS", "CIAS", "COAS"):
+    for repo in ("PEAS", "MAS", "CAS", "SAS", "RAS", "CONAS", "CTAS", "AAS", "TDAS", "TAS", "CIAS", "COAS"):
         pat = os.path.join(PSMA, repo, "schemas", "**", "*.json")
         for f in glob.glob(pat, recursive=True):
             try:
@@ -80,9 +80,9 @@ def main():
         else:
             print(f"  schema OK: {rel}")
 
-    # 2. examples validate against tbas.json
-    tbas = registry.get_or_retrieve("https://psma.com/tbas/tbas.json").value.contents
-    validator = Draft202012Validator(tbas, registry=registry)
+    # 2. examples validate against tdas.json
+    tdas = registry.get_or_retrieve("https://psma.com/tdas/tdas.json").value.contents
+    validator = Draft202012Validator(tdas, registry=registry)
     for f in sorted(glob.glob(os.path.join(HERE, "examples", "*.json"))):
         inst = json.load(open(f))
         errs = sorted(validator.iter_errors(inst), key=lambda e: list(e.path))
@@ -95,7 +95,7 @@ def main():
             print(f"  example OK: {os.path.basename(f)}")
 
     # 3. citizenship — each example, wrapped under the PEAS 'timeBase' branch, is a
-    #    valid PEAS document ({inputs, timeBase: <bare TBAS component>, outputs}),
+    #    valid PEAS document ({inputs, timeBase: <bare TDAS component>, outputs}),
     #    exactly as an analog IC nests under 'analog'. This gate passes only once
     #    PEAS/peas.json carries the 'timeBase' branch + designRequirements if/then.
     try:

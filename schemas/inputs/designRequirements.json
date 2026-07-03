@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://psma.com/tbas/inputs/designRequirements.json",
+    "$id": "https://psma.com/tdas/inputs/designRequirements.json",
     "title": "designRequirements",
-    "description": "The requirements a time-base part must comply with. Built on the PEAS designRequirementsBase mixin, with a deviceType discriminator that aligns with TBAS's top-level family discriminator, plus a small set of generic selection seeds (the AAS single-seed pattern: time-base selection filters on family + a couple of headline specs).",
+    "description": "The requirements a time-base part must comply with. Built on the PEAS designRequirementsBase mixin, with a deviceType discriminator that aligns with TDAS's top-level family discriminator, plus a small set of generic selection seeds (the AAS single-seed pattern: time-base selection filters on family + a couple of headline specs).",
     "allOf": [
         {
             "$ref": "https://psma.com/peas/utils.json#/$defs/designRequirementsBase"
@@ -11,7 +11,7 @@
             "type": "object",
             "properties": {
                 "deviceType": {
-                    "description": "Required time-base family. Aligns with TBAS's top-level family discriminator.",
+                    "description": "Required time-base family. Aligns with TDAS's top-level family discriminator.",
                     "type": "string",
                     "enum": [
                         "oscillator",

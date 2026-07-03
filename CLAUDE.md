@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository nature
 
-TBAS is a **schema repository**. It defines the **Time-Based Agnostic
+TDAS is a **schema repository**. It defines the **Timing Devices Agnostic
 Structure**: a JSON Schema 2020-12 specification for time-base components —
 frequency-control products (quartz crystals, ceramic resonators, XO / TCXO /
 VCXO / OCXO, MEMS, silicon-RC, programmable oscillators), 555-class timers,
@@ -27,16 +27,16 @@ python3 scripts/validate.py
 
 ## Layout (the AAS pattern)
 
-- `schemas/tbas.json` — top wrapper `{ inputs, <family>, outputs }` with the
+- `schemas/tdas.json` — top wrapper `{ inputs, <family>, outputs }` with the
   bare-component/full-document `anyOf` + a `oneOf` over the 3 family
-  discriminators (`oscillator` | `timer` | `latch`). Every valid TBAS
+  discriminators (`oscillator` | `timer` | `latch`). Every valid TDAS
   document is also a valid PEAS document (the `timeBase` branch).
 - `schemas/<family>.json` — one file per family: `{ manufacturerInfo,
   distributorsInfo, behavioral }`, any one alone valid;
   `manufacturerInfo.datasheetInfo = { part, electrical, thermal, mechanical,
   provenance }`.
-- `schemas/utils.json` — TBAS-owned shared defs (`part`/`thermal`/`mechanical`
-  over the PEAS `datasheetInfo*` bases, TBAS `supply`, family enums).
+- `schemas/utils.json` — TDAS-owned shared defs (`part`/`thermal`/`mechanical`
+  over the PEAS `datasheetInfo*` bases, TDAS `supply`, family enums).
 - `schemas/inputs.json` + `schemas/inputs/designRequirements.json` — seed on
   the PEAS `designRequirementsBase` mixin with `deviceType` discriminator.
 - `schemas/outputs.json` — selection-only output surface on PEAS `outputBase`.

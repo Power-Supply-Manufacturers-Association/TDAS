@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://psma.com/tbas/latch.json",
+    "$id": "https://psma.com/tdas/latch.json",
     "title": "latch",
-    "description": "Set/reset latch component data. The presence of the 'latch' field at the top level of a TBAS document discriminates the family. Covers discrete SR-latch logic parts (74HC279 class); the `behavioral` block is the ideal latch atom consumed by CIAS control bricks — the commutation memory of peak-current-mode control (clock sets, current comparator resets). Valid on an otherwise part-less document.",
+    "description": "Set/reset latch component data. The presence of the 'latch' field at the top level of a TDAS document discriminates the family. Covers discrete SR-latch logic parts (74HC279 class); the `behavioral` block is the ideal latch atom consumed by CIAS control bricks — the commutation memory of peak-current-mode control (clock sets, current comparator resets). Valid on an otherwise part-less document.",
     "type": "object",
     "additionalProperties": false,
     "properties": {

@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://psma.com/tbas/inputs.json",
+    "$id": "https://psma.com/tdas/inputs.json",
     "title": "inputs",
     "description": "Inputs used to select or evaluate a time-base part. Mirrors the SAS / AAS inputs structure: a required designRequirements seed plus optional operatingPoints (the conditions under which the part's frequency error and dissipation are evaluated). outputs[i] aligns positionally with operatingPoints[i].",
     "type": "object",

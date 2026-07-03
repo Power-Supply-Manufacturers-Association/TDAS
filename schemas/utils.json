@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://psma.com/tbas/utils.json",
-    "title": "TBAS utils",
-    "description": "Shared sub-schemas reused by every TBAS per-family document (oscillator, timer, latch). Identification (part/thermal/mechanical) mirrors the AAS/SAS pattern and reuses the PEAS datasheetInfo* bases. The supply block is TBAS-specific: time bases are single-channel, and the OCXO oven makes warm-up power a first-class spec. Fractional-frequency quantities (tolerance, stability, aging, pull range) are stored as DIMENSIONLESS fractions (1 ppm = 1e-6), keeping the all-SI rule; descriptions state the ppm equivalence.",
+    "$id": "https://psma.com/tdas/utils.json",
+    "title": "TDAS utils",
+    "description": "Shared sub-schemas reused by every TDAS per-family document (oscillator, timer, latch). Identification (part/thermal/mechanical) mirrors the AAS/SAS pattern and reuses the PEAS datasheetInfo* bases. The supply block is TDAS-specific: time bases are single-channel, and the OCXO oven makes warm-up power a first-class spec. Fractional-frequency quantities (tolerance, stability, aging, pull range) are stored as DIMENSIONLESS fractions (1 ppm = 1e-6), keeping the all-SI rule; descriptions state the ppm equivalence.",
     "$defs": {
         "part": {
             "title": "timeBasePart",

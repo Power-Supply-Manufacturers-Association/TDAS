@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://psma.com/tbas/outputs.json",
+    "$id": "https://psma.com/tdas/outputs.json",
     "title": "outputs",
     "description": "Results computed for one operating point of a time-base part. Time bases are SELECTED rather than simulated, so the output surface is a single selection block (the AAS pattern, reduced): how the bound part met the design-requirements seed. Each block carries the PEAS outputBase {origin, methodUsed} provenance shell. outputs[i] aligns positionally with inputs.operatingPoints[i].",
     "type": "object",

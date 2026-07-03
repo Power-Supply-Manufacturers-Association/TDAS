@@ -1,4 +1,4 @@
-# TBAS — Time-Based Agnostic Structure
+# TDAS — Timing Devices Agnostic Structure
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -11,8 +11,8 @@ one-shot / latch) that make PWM, peak-current-mode, constant-on-time and
 resonant frequency-modulation control loops netlistable from atoms
 (PEAS-RFC 0001).
 
-TBAS is part of the OpenConverters *Agnostic Structure* family rooted at
-[PEAS](../PEAS): every valid TBAS document is also a valid PEAS document
+TDAS is part of the OpenConverters *Agnostic Structure* family rooted at
+[PEAS](../PEAS): every valid TDAS document is also a valid PEAS document
 (the `timeBase` branch). Boundaries: PWM/LLC/PFC **controller ICs** live in
 CTAS; **analog signal-path ICs** (op amps, comparators, sample-and-holds)
 live in AAS; **RTC modules, clock generators/buffers/jitter attenuators, RF
@@ -56,8 +56,8 @@ python3 scripts/validate.py
 
 Three gates (a gate that cannot run FAILS): schema meta-validation + full
 `$ref` resolution against the sibling-repo registry, examples against
-`tbas.json`, and PEAS citizenship of every example. Requires the sibling
-repos checked out alongside TBAS (see [the workspace layout](../PEAS)).
+`tdas.json`, and PEAS citizenship of every example. Requires the sibling
+repos checked out alongside TDAS (see [the workspace layout](../PEAS)).
 
 Finished orderable parts live in **`TAS/data/time_based.ndjson`** (PEAS-wrapped
 `{"timeBase": ...}`), validated by `TAS/tests/test_data.py` and physics-checked

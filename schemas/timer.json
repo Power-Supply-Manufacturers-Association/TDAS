@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://psma.com/tbas/timer.json",
+    "$id": "https://psma.com/tdas/timer.json",
     "title": "timer",
-    "description": "Timer component data (555 class and successors). The presence of the 'timer' field at the top level of a TBAS document discriminates the family. The `behavioral` block is the ideal timer atom consumed by CIAS control bricks — the monostable one-shot is what makes constant-on-time control a single component. Valid on an otherwise part-less document.",
+    "description": "Timer component data (555 class and successors). The presence of the 'timer' field at the top level of a TDAS document discriminates the family. The `behavioral` block is the ideal timer atom consumed by CIAS control bricks — the monostable one-shot is what makes constant-on-time control a single component. Valid on an otherwise part-less document.",
     "type": "object",
     "additionalProperties": false,
     "properties": {

@@ -1,13 +1,13 @@
-# TBAS schema reference
+# TDAS schema reference
 
 Generated against the schemas in `schemas/` — keep in sync when editing them.
 
-## Top level (`tbas.json`)
+## Top level (`tdas.json`)
 
 `{ inputs, <family>, outputs }` — exactly one of `oscillator` | `timer` |
 `latch` (top-level field presence is the discriminator). A single-key bare
 component is valid; a document with `inputs` must also carry `outputs`.
-Every valid TBAS document is a valid PEAS document under `{timeBase: ...}`.
+Every valid TDAS document is a valid PEAS document under `{timeBase: ...}`.
 
 ## `inputs` (`inputs.json`)
 
@@ -53,7 +53,7 @@ distributor filter columns plus headline datasheet specs, nothing derived:
 | `builtInCapacitance` | F | three-terminal ceramic resonators |
 | `supply` | — | `{minimumSupplyVoltage, maximumSupplyVoltage, currentConsumption, warmupPower (OCXO)}` |
 
-### `behavioral` (the TBAS periodic-source atom)
+### `behavioral` (the TDAS periodic-source atom)
 
 Required: `shape` (`sawtooth`/`triangle`/`square`/`sine`), `frequency` (Hz),
 `amplitude` (V), `offset` (V). Optional: `phase` (rad; absent = waveform
@@ -69,7 +69,7 @@ canonical phase-accumulator subcircuit.
 `maximumFrequency` (Hz), `timingAccuracy` (fraction), `numberOfChannels`
 (556 = 2), `supply`.
 
-### `behavioral` (the TBAS one-shot atom)
+### `behavioral` (the TDAS one-shot atom)
 Required: `mode` (`monostable`/`astable`), `outputHigh`, `outputLow` (V).
 Monostable additionally requires `threshold` (V), `polarity`
 (`risingEdge`/`fallingEdge`), `onTime` (s), `retriggerable` (bool — required,
@@ -81,7 +81,7 @@ the behaviors differ exactly at COT minimum-off-time); astable requires
 ### `electrical`
 `technology` (`CMOS`/`TTL`), `propagationDelay` (s), `numberOfChannels`, `supply`.
 
-### `behavioral` (the TBAS memory atom)
+### `behavioral` (the TDAS memory atom)
 All required: `setThreshold`, `resetThreshold`, `outputHigh`, `outputLow` (V),
 `dominance` (`set`/`reset` — never defaulted; PCM gate latches are
 reset-dominant so over-current wins the race with the clock).
@@ -95,7 +95,7 @@ Per operating point, a single optional `selection` block on the PEAS
 ## Shared (`utils.json`)
 
 `part` / `thermal` / `mechanical` extend the PEAS `datasheetInfo*` bases
-(AAS pattern, sealed extension branches). `supply` is TBAS-specific
+(AAS pattern, sealed extension branches). `supply` is TDAS-specific
 (single-channel current; `warmupPower` because the OCXO oven makes warm-up
 power a first-class spec; steady-state power is derivable and NOT stored).
 Enums: `oscillatorTechnology`, `oscillatorMode`, `outputType`,

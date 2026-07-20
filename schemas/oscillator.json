@@ -185,7 +185,7 @@
         },
         "electrical": {
             "title": "oscillatorElectrical",
-            "description": "Oscillator/crystal electricals — the live distributor filter set plus the headline datasheet specs, nothing else (no derived quantities). Fractional-frequency specs (frequencyTolerance, frequencyStability, agingPerYear, pullRange, dutyCycle, spread-spectrum bandwidth) are DIMENSIONLESS fractions (1 ppm = 1e-6; 1% = 0.01 — the same field serves ppm-class quartz and %-class ceramic/RC parts). Condition-qualified specs carry their condition: rmsPhaseJitter carries its integration band. Bare-resonator fields (loadCapacitance, equivalentSeriesResistance, resonantImpedance, builtInCapacitance) apply to quartzCrystal/ceramicResonator; pullRange (absolute pull range, APR-style) to voltage/digitally-pulled classes; supply and enableFunction to every class EXCEPT bare resonators. The operating temperature range that stability is specified over lives in datasheetInfo.thermal (PEAS mixin), not here.",
+            "description": "Oscillator/crystal electricals — the live distributor filter set plus the headline datasheet specs, nothing else (no derived quantities). Fractional-frequency specs (frequencyTolerance, frequencyStability, agingPerYear, pullRange, dutyCycle, spread-spectrum bandwidth) are DIMENSIONLESS fractions (1 ppm = 1e-6; 1% = 0.01 — the same field serves ppm-class quartz and %-class ceramic/RC parts). Condition-qualified specs carry their condition: rmsPhaseJitter carries its integration band. Bare-resonator fields (loadCapacitance, equivalentSeriesResistance, resonantImpedance, builtInCapacitance, shuntCapacitance C0, motionalCapacitance C1) apply to quartzCrystal/ceramicResonator; pullRange (absolute pull range, APR-style) to voltage/digitally-pulled classes; supply and enableFunction to every class EXCEPT bare resonators. The operating temperature range that stability is specified over lives in datasheetInfo.thermal (PEAS mixin), not here.",
             "type": "object",
             "additionalProperties": false,
             "properties": {
@@ -293,6 +293,16 @@
                     "description": "Value of the built-in load capacitors, in F (three-terminal ceramic resonators). Absent = no built-in capacitors.",
                     "type": "number",
                     "minimum": 0
+                },
+                "shuntCapacitance": {
+                    "description": "C0 — static shunt capacitance across the resonator terminals, in F (electrode + holder capacitance; typically 1–7 pF for quartz). Bare resonators only.",
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                "motionalCapacitance": {
+                    "description": "C1 (Cm) — motional-arm capacitance of the equivalent circuit, in F (typically 1–30 fF for quartz). Together with C0 it determines pullability: ΔF/F = C1 / (2·(C0 + CL)), which lets a load-capacitance mismatch check be exact instead of estimated. Bare resonators only.",
+                    "type": "number",
+                    "exclusiveMinimum": 0
                 },
                 "supply": {
                     "$ref": "./utils.json#/$defs/supply"

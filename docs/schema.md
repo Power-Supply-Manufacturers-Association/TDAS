@@ -51,6 +51,8 @@ distributor filter columns plus headline datasheet specs, nothing derived:
 | `equivalentSeriesResistance` | Ohm | bare quartz (ESR max) |
 | `resonantImpedance` | Ohm | ceramic resonators |
 | `builtInCapacitance` | F | three-terminal ceramic resonators |
+| `shuntCapacitance` | F | bare resonators: C0, static shunt capacitance (typ. 1–7 pF quartz) |
+| `motionalCapacitance` | F | bare resonators: C1/Cm, motional-arm capacitance (typ. 1–30 fF quartz); with C0 gives exact pull ΔF/F = C1 / (2·(C0 + CL)) |
 | `supply` | — | `{minimumSupplyVoltage, maximumSupplyVoltage, currentConsumption, warmupPower (OCXO)}` |
 
 ### `behavioral` (the TDAS periodic-source atom)

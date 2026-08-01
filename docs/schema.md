@@ -96,7 +96,7 @@ Per operating point, a single optional `selection` block on the PEAS
 
 ## Shared (`utils.json`)
 
-`part` / `thermal` / `mechanical` extend the PEAS `datasheetInfo*` bases
+`part` / `thermal` / `mechanical` extend the PEAS `datasheetInfo*` bases (`mechanical` also carries optional `pinout`/`landPattern` — the shared PEAS types, hoisted 2026-08)
 (AAS pattern, sealed extension branches). `supply` is TDAS-specific
 (single-channel current; `warmupPower` because the OCXO oven makes warm-up
 power a first-class spec; steady-state power is derivable and NOT stored).

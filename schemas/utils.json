@@ -67,6 +67,14 @@
                         "case": {
                             "type": "string",
                             "description": "Package name (2016, 3225, SOIC-8, ...) — mirrors part.case for convenience."
+                        },
+                        "pinout": {
+                            "description": "Per-terminal function map (shared PEAS type, hoisted 2026-08): (pin, name, function) triples — e.g. an oscillator's vdd/ground/output/enable.",
+                            "$ref": "https://psma.com/peas/utils.json#/$defs/pinout"
+                        },
+                        "landPattern": {
+                            "description": "Manufacturer-recommended PCB land pattern (shared PEAS type, hoisted 2026-08).",
+                            "$ref": "https://psma.com/peas/utils.json#/$defs/landPattern"
                         }
                     },
                     "additionalProperties": false

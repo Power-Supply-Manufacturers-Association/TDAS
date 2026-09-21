@@ -24,8 +24,18 @@ PEAS `designRequirementsBase` mixin + `deviceType`* (`oscillator`/`timer`/`latch
 
 ## `oscillator` (`oscillator.json`)
 
-`{ manufacturerInfo, distributorsInfo, behavioral }` — any one alone is valid
-(`manufacturerInfo` | `behavioral` | empty seed).
+`{ manufacturerInfo, distributorsInfo, substitutesInfo, behavioral }` — the
+`anyOf` accepts `manufacturerInfo` | `behavioral` | empty seed; `distributorsInfo`
+and `substitutesInfo` ride along with a sourced part and are rejected on their
+own. `timer.json` and `latch.json` have the same outer shape.
+
+`substitutesInfo[]` is the PEAS `substituteInfo` type (PEAS-RFC 0002), shared
+with every other part family: `{partNumber (req), manufacturer, type, notes,
+source}`. `type: "successor"` means THIS part is superseded by the named one —
+one hop, as the manufacturer states it, never inferred from `status: obsolete`.
+The named part need not be in any catalogue (resolution is the referential
+pass's job), and the evidence is an ordinary `datasheetInfo.provenance[]` entry
+with `fields: ["substitutesInfo"]`.
 
 ### `electrical`
 
